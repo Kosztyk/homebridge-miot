@@ -9,8 +9,9 @@ const Events = require('./lib/constants/Events.js');
 let Service, Characteristic, Homebridge, Accessory;
 
 const PLUGIN_NAME = 'homebridge-xiaomi-mi';
-const PLATFORM_NAME = 'miot';
-const PLUGIN_VERSION = '1.0.2';
+const PLATFORM_NAME = 'xiaomi-mi';
+const LEGACY_PLATFORM_NAME = 'miot';
+const PLUGIN_VERSION = '1.0.3';
 
 module.exports = function(homebridge) {
   Service = homebridge.hap.Service;
@@ -18,6 +19,9 @@ module.exports = function(homebridge) {
   Homebridge = homebridge;
   Accessory = homebridge.platformAccessory;
   homebridge.registerPlatform(PLUGIN_NAME, PLATFORM_NAME, miotPlatform, true);
+  // Backward compatibility: existing configs using "platform": "miot" still load.
+  // To get [xiaomi-mi] in the log, change config.json to "platform": "xiaomi-mi".
+  homebridge.registerPlatform(PLUGIN_NAME, LEGACY_PLATFORM_NAME, legacyMiotPlatform, true);
 };
 
 
@@ -94,9 +98,9 @@ class miotDeviceController {
 
     // generate uuid
     if (this.deviceId) {
-      this.UUID = Homebridge.hap.uuid.generate(this.token + this.ip + this.deviceId + PLATFORM_NAME);
+      this.UUID = Homebridge.hap.uuid.generate(this.token + this.ip + this.deviceId + this.platformName);
     } else {
-      this.UUID = Homebridge.hap.uuid.generate(this.token + this.ip + PLATFORM_NAME);
+      this.UUID = Homebridge.hap.uuid.generate(this.token + this.ip + this.platformName);
     }
 
     // prepare variables
@@ -182,7 +186,7 @@ class miotDeviceController {
     // first unregister a cached accessory if present!
     if (this.restoredCachedAccessory) {
       this.logger.debug('Found cached accessory for this device! Unregistering it first!');
-      this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [this.restoredCachedAccessory]);
+      this.api.unregisterPlatformAccessories(PLUGIN_NAME, this.platformName, [this.restoredCachedAccessory]);
       this.restoredCachedAccessory = null;
     }
 
@@ -191,7 +195,7 @@ class miotDeviceController {
 
     if (this.device.getAccessoryWrapper() && this.device.getAccessories().length > 0) {
       this.logger.info(`Registering ${this.device.getAccessories().length} accessories!`);
-      this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, this.device.getAccessories());
+      this.api.registerPlatformAccessories(PLUGIN_NAME, this.platformName, this.device.getAccessories());
 
       if (this.deviceEnabled) {
         this.logger.info('Everything looks good! Initiating property polling!');
@@ -350,7 +354,7 @@ class miotPlatform {
       return;
     }
 
-    const newDevCtrl = new miotDeviceController(this.log, deviceConfig, this.config.micloud, this.api);
+    const newDevCtrl = new miotDeviceController(this.log, deviceConfig, this.config.micloud, this.api, this.platformName);
     if (!newDevCtrl || !newDevCtrl.getAccessoryUuid()) {
       this.log.error(`[${deviceName}] Device controller could not be created. Skipping this device.`);
       return;
@@ -370,7 +374,7 @@ class miotPlatform {
     if (this.cachedAccessories && this.cachedAccessories.length > 0) {
       // we don't have any special identifiers, we just remove all our accessories
       this.log.debug('Removing all cached accessories');
-      this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, this.cachedAccessories);
+      this.api.unregisterPlatformAccessories(PLUGIN_NAME, this.platformName, this.cachedAccessories);
       this.cachedAccessories = []; // clear out the array
     } else {
       this.log.debug('No accessories to remove!');
@@ -378,9 +382,16 @@ class miotPlatform {
   }
 
   removeAccessory(accessory) {
-    this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
+    this.api.unregisterPlatformAccessories(PLUGIN_NAME, this.platformName, [accessory]);
     this.cachedAccessories = this.cachedAccessories.filter(item => item !== accessory);
   }
 
 
+}
+
+
+class legacyMiotPlatform extends miotPlatform {
+  constructor(log, config, api) {
+    super(log, config, api, LEGACY_PLATFORM_NAME);
+  }
 }
