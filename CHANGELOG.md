@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-05-30
+### Changed
+- Renamed the package to `homebridge-xiaomi-mi` with Homebridge display name `Xiaomi Mi`.
+- Set plugin version to `1.0.0`.
+- Added a dedicated `xiaomi.vacuum.c108` / Xiaomi Robot Vacuum E5 implementation with richer HomeKit controls.
+- Added richer Air Fryer controls for `careli.fryer.maf02`, including pause/resume/cancel and custom property controls.
+- Sanitized HomeKit accessory and information-service names to avoid HAP invalid-name warnings.
+
 ## [1.8.7] - 2026-03-01
 ### Added
 - Added support for yunmi.kettle.v19 (Xiaomi Mi Smart Kettle Pro 2) kettle Thanks @zloirog

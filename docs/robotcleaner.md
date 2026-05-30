@@ -1,7 +1,12 @@
 ## Robot Cleaner
 
 ### Robot Cleaner specific configuration fields
-- none
+- `vacuumExtraControls` (default: `true`) - automatically exposes supported robot-vacuum controls as extra HomeKit services.
+- `vacuumSuctionControl` (default: `true`) - exposes `vacuum:suction-level` as HomeKit switches when supported.
+- `vacuumSweepTypeControl` (default: `true`) - exposes `vacuum:sweep-type` / cleaning mode as HomeKit switches when supported.
+- `vacuumBreakpointResumeControl` (default: `true`) - exposes `vacuum:sweep-break-switch` as a HomeKit switch when supported.
+
+HomeKit does not have a classic HAP robot-vacuum service, so the main accessory still appears as a switch. Supported extra services add Pause Cleaning, Resume Cleaning, Return to Dock, Battery, Filter Maintenance, Dock occupancy, suction level, cleaning mode and breakpoint-resume controls.
 
 ### Room cleaning
 

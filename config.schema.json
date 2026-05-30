@@ -3,8 +3,8 @@
   "pluginType": "platform",
   "singular": true,
   "customUi": true,
-  "headerDisplay": "Homebridge plugin for devices using the miot protocol",
-  "footerDisplay": "For a detailed description, see the [README](https://github.com/merdok/homebridge-miot#platform-configuration-fields)",
+  "headerDisplay": "Xiaomi Mi Homebridge plugin for devices using the MIoT protocol",
+  "footerDisplay": "For a detailed description, see the README.",
   "schema": {
     "type": "object",
     "properties": {
@@ -231,6 +231,34 @@
             "modeControl": {
               "title": "Mode control service",
               "description": "Show mode switches which allow to change the device mode.",
+              "type": "boolean",
+              "default": true,
+              "required": false
+            },
+            "vacuumExtraControls": {
+              "title": "Robot vacuum extra controls",
+              "description": "Show extra robot vacuum controls such as pause, resume, return to dock, suction level, cleaning mode and breakpoint resume when supported.",
+              "type": "boolean",
+              "default": true,
+              "required": false
+            },
+            "vacuumSuctionControl": {
+              "title": "Robot vacuum suction control",
+              "description": "Show suction level controls when the robot vacuum supports vacuum:suction-level.",
+              "type": "boolean",
+              "default": true,
+              "required": false
+            },
+            "vacuumSweepTypeControl": {
+              "title": "Robot vacuum cleaning mode control",
+              "description": "Show cleaning mode controls when the robot vacuum supports vacuum:sweep-type.",
+              "type": "boolean",
+              "default": true,
+              "required": false
+            },
+            "vacuumBreakpointResumeControl": {
+              "title": "Robot vacuum breakpoint resume control",
+              "description": "Show breakpoint resume control when the robot vacuum supports vacuum:sweep-break-switch.",
               "type": "boolean",
               "default": true,
               "required": false
@@ -497,13 +525,35 @@
               "type": "integer",
               "minimum": 1,
               "required": false
+            },
+            "airFryerExtraControls": {
+              "title": "Air fryer extra controls",
+              "description": "Show extra air fryer controls such as pause, resume, cancel, preheat, appointment time, food quantity and turn-pot when supported.",
+              "type": "boolean",
+              "default": true,
+              "required": false
+            },
+            "airFryerActionControls": {
+              "title": "Air fryer action controls",
+              "description": "Show stateless action buttons for Pause Cooking, Resume Cooking and Cancel Cooking when supported.",
+              "type": "boolean",
+              "default": true,
+              "required": false
+            },
+            "airFryerCustomPropertyControls": {
+              "title": "Air fryer custom property controls",
+              "description": "Show custom MIoT property controls for preheat, appointment time, food quantity and turn-pot when supported.",
+              "type": "boolean",
+              "default": true,
+              "required": false
             }
           }
         }
       }
     }
   },
-  "layout": [{
+  "layout": [
+    {
       "type": "fieldset",
       "title": "Global MiCloud Settings",
       "description": "Configure global MiCloud connection details used for all devices.",
@@ -531,7 +581,8 @@
           "key": "devices[]",
           "type": "fieldset",
           "title": "{{ value.title }}",
-          "items": [{
+          "items": [
+            {
               "type": "fieldset",
               "title": "Advanced Settings",
               "description": "Configure advanced plugin settings.",
@@ -575,6 +626,13 @@
                 "devices[].buzzerControl",
                 "devices[].childLockControl",
                 "devices[].modeControl",
+                "devices[].vacuumBreakpointResumeControl",
+                "devices[].vacuumSweepTypeControl",
+                "devices[].vacuumSuctionControl",
+                "devices[].vacuumExtraControls",
+                "devices[].airFryerExtraControls",
+                "devices[].airFryerActionControls",
+                "devices[].airFryerCustomPropertyControls",
                 "devices[].suppressAutoServiceCreation",
                 {
                   "key": "devices[].actionButtons",
@@ -846,7 +904,8 @@
               "description": "Configure air monitor specific device settings.",
               "expandable": true,
               "expanded": false,
-              "items": [{
+              "items": [
+                {
                   "key": "devices[].pm25Breakpoints",
                   "type": "array",
                   "items": {

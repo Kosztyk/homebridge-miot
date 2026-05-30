@@ -157,6 +157,7 @@ Devices marked as 🔴[BLE Mesh] and 🟡[Zigbee] require a connection over a Ga
 -   zhimi.airfresh.va4 (Smartmi Fresh Air System XFXTDFR02ZM) 🔵[MiCloud]
 
 ### Robot Cleaner
+-   xiaomi.vacuum.c108 (Xiaomi Robot Vacuum E5)
 
 -   dreame.vacuum.p2008 (Dreame F9)
 -   dreame.vacuum.p2009 (Dreame D9)

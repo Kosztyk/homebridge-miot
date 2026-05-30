@@ -1,6 +1,6 @@
 <span align="center">
 
-# homebridge-miot
+# Xiaomi Mi
 
 [![verified-by-homebridge](https://badgen.net/badge/homebridge/verified/purple)](https://github.com/homebridge/homebridge/wiki/Verified-Plugins)
 [![homebridge-miot](https://badgen.net/npm/v/homebridge-miot?icon=npm)](https://www.npmjs.com/package/homebridge-miot)
@@ -10,7 +10,7 @@
 
 </span>
 
-`homebridge-miot` is a plugin for homebridge which allows you to control any device supporting the miot protocol from Xiaomi!  
+`homebridge-xiaomi-mi` is a Xiaomi Mi Homebridge plugin for homebridge which allows you to control any device supporting the miot protocol from Xiaomi!  
 The goal is to add Homekit support to miot devices and make them fully controllable from the native Homekit iOS app and Siri.
 
 #### Feedback and contribution is helpful and will improve the plugin!
@@ -73,9 +73,9 @@ Install homebridge:
 sudo npm install -g homebridge
 ```
 
-Install homebridge-miot:
+Install Xiaomi Mi:
 ```sh
-sudo npm install -g homebridge-miot
+sudo npm install -g homebridge-xiaomi-mi
 ```
 
 ## Configuration
