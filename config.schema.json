@@ -546,6 +546,12 @@
               "type": "boolean",
               "default": true,
               "required": false
+            },
+            "yeelightLanControl": {
+              "title": "Use native Yeelight LAN protocol",
+              "type": "boolean",
+              "default": true,
+              "description": "For Yeelight strip2/light devices, use the native Yeelight LAN protocol on port 55443 for HomeKit write commands, similar to Home Assistant. Requires LAN Control/Developer Mode enabled in the Yeelight app."
             }
           }
         }

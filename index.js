@@ -11,7 +11,7 @@ let Service, Characteristic, Homebridge, Accessory;
 const PLUGIN_NAME = 'homebridge-xiaomi-mi';
 const PLATFORM_NAME = 'xiaomi-mi';
 const LEGACY_PLATFORM_NAME = 'miot';
-const PLUGIN_VERSION = '1.0.5';
+const PLUGIN_VERSION = '1.0.6';
 
 module.exports = function(homebridge) {
   Service = homebridge.hap.Service;
@@ -142,6 +142,7 @@ class miotDeviceController {
     let model = this.model || this.cachedDeviceInfo.model;
 
     this.miotDevice = new MiotDevice(this.ip, this.token, deviceId, model, this.name, this.logger);
+    this.miotDevice.userConfig = this.config;
     this.miotDevice.setPollingInterval(this.pollingInterval);
     this.miotDevice.setMiCloudConfig(this.miCloudConfig);
 
