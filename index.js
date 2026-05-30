@@ -10,7 +10,7 @@ let Service, Characteristic, Homebridge, Accessory;
 
 const PLUGIN_NAME = 'homebridge-xiaomi-mi';
 const PLATFORM_NAME = 'miot';
-const PLUGIN_VERSION = '1.0.0';
+const PLUGIN_VERSION = '1.0.2';
 
 module.exports = function(homebridge) {
   Service = homebridge.hap.Service;
@@ -35,7 +35,7 @@ class miotDeviceController {
       if (!config.token) throw new Error(`'token' is required but not defined for ${config.name}!`);
     } catch (error) {
       this.logger.error(error);
-      this.logger.error(`Failed to create platform device, missing mandatory information!`, CLASS_LOG_PREFIX);
+      this.logger.error(`Failed to create platform device, missing mandatory information!`);
       this.logger.error(`Please check your device config!`);
       return;
     }
@@ -340,13 +340,30 @@ class miotPlatform {
   }
 
   initDevice(deviceConfig) {
+    const deviceName = deviceConfig.name || 'Miot device';
+    if (!deviceConfig.ip) {
+      this.log.error(`[${deviceName}] Error: 'ip' is required but not defined for ${deviceName}! Skipping this device.`);
+      return;
+    }
+    if (!deviceConfig.token) {
+      this.log.error(`[${deviceName}] Error: 'token' is required but not defined for ${deviceName}! Skipping this device.`);
+      return;
+    }
+
     const newDevCtrl = new miotDeviceController(this.log, deviceConfig, this.config.micloud, this.api);
+    if (!newDevCtrl || !newDevCtrl.getAccessoryUuid()) {
+      this.log.error(`[${deviceName}] Device controller could not be created. Skipping this device.`);
+      return;
+    }
+
     const restoredAccessory = this.cachedAccessories.find(accessory => accessory.UUID === newDevCtrl.getAccessoryUuid());
     if (restoredAccessory) {
       newDevCtrl.setRestoredCachedAccessory(restoredAccessory);
       this.cachedAccessories = this.cachedAccessories.filter(item => item !== restoredAccessory); // remove the cached accessory from the list since the controller will remove it later.
     }
-    newDevCtrl.setupController(); // begin the controller setup
+    newDevCtrl.setupController().catch(err => {
+      this.log.error(`[${deviceName}] Setup failed: ${err && err.stack ? err.stack : err}`);
+    }); // begin the controller setup
   }
 
   removeAccessories() {

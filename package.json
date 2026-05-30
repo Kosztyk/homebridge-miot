@@ -1,7 +1,7 @@
 {
   "name": "homebridge-xiaomi-mi",
   "displayName": "Xiaomi Mi",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Homebridge plugin for Xiaomi Mi devices supporting the MIoT protocol",
   "main": "index.js",
   "engines": {
@@ -51,12 +51,12 @@
   "license": "MIT",
   "dependencies": {
     "@homebridge/plugin-ui-utils": "^0.0.19",
-    "chalk": "^4.1.2",
-    "color-convert": "^2.0.1",
-    "env-paths": "^2.2.1",
     "node-fetch": "^2.6.7",
     "randomstring": "^1.2.1",
-    "yargs": "^17.3.1"
+    "color-convert": "^2.0.1",
+    "yargs": "^17.3.1",
+    "chalk": "^4.1.2",
+    "env-paths": "^2.2.1"
   },
   "repository": {
     "type": "git",
