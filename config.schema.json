@@ -569,21 +569,21 @@
             },
             "vacuumRefinedHomeKitView": {
               "title": "Robot vacuum refined HomeKit view",
-              "description": "Expose robot vacuums as a Fanv2 primary service for a richer Apple Home control card. HomeKit has no native robot vacuum service, so this uses the closest native UI while keeping vacuum action buttons as secondary services.",
-              "type": "boolean",
-              "default": true,
-              "required": false
-            },
-            "vacuumLegacySwitch": {
-              "title": "Robot vacuum legacy switch",
-              "description": "Also expose a secondary switch for the robot vacuum start/stop control when the refined Fanv2 view is enabled.",
+              "description": "Optional legacy experiment: expose robot vacuums as a Fanv2 primary service for a richer Apple Home card. Disabled by default so robot vacuums like Jamal remain on the robot-cleaner/vacuum accessory layout instead of being presented as a fan or air purifier.",
               "type": "boolean",
               "default": false,
               "required": false
             },
+            "vacuumLegacySwitch": {
+              "title": "Robot vacuum legacy switch",
+              "description": "When robot-vacuum refined Fanv2 view is enabled, also expose a secondary switch for start/stop. This has no effect in the default vacuum layout where the main switch is already used.",
+              "type": "boolean",
+              "default": true,
+              "required": false
+            },
             "airPurifierRefinedHomeKitView": {
               "title": "Air purifier refined HomeKit view",
-              "description": "Mark the native AirPurifier service as the primary service so Apple Home shows the richer air-purifier control card.",
+              "description": "Mark only real air-purifier devices as a native AirPurifier primary service so Apple Home shows the richer air-purifier control card. This does not affect robot vacuums such as Jamal.",
               "type": "boolean",
               "default": true,
               "required": false
