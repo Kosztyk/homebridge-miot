@@ -552,6 +552,13 @@
               "type": "boolean",
               "default": true,
               "description": "For Yeelight strip2/light devices, use the native Yeelight LAN protocol on port 55443 for HomeKit write commands, similar to Home Assistant. Requires LAN Control/Developer Mode enabled in the Yeelight app."
+            },
+            "yeelightStatePollingInterval": {
+              "title": "Yeelight LAN state polling interval",
+              "type": "integer",
+              "minimum": 0,
+              "default": 15,
+              "description": "For devices using native Yeelight LAN control, poll the Yeelight LAN API every N seconds to refresh HomeKit state when the light is changed from the Xiaomi/Yeelight app. Set to 0 to disable."
             }
           }
         }
