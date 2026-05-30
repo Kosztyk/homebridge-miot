@@ -1170,3 +1170,10 @@ This update includes new devices added by some users. I appreciate any contribut
 
 ## [0.1.0] - 2021-02-28
 ### Initial release
+
+## 1.0.8
+
+- Added refined HomeKit presentation options for robot vacuums, air purifiers, and air fryers.
+- Robot vacuums can now use a Fanv2 primary service to avoid a plain switch-only card while keeping vacuum action controls as secondary services.
+- Air fryers now prefer a HeaterCooler primary service so Apple Home shows heat/temperature controls first.
+- Air purifiers now mark the native AirPurifier service as primary for a cleaner Home app detail view.

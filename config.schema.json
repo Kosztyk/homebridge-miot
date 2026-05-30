@@ -559,6 +559,48 @@
               "minimum": 0,
               "default": 15,
               "description": "For devices using native Yeelight LAN control, poll the Yeelight LAN API every N seconds to refresh HomeKit state when the light is changed from the Xiaomi/Yeelight app. Set to 0 to disable."
+            },
+            "refinedHomeKitView": {
+              "title": "Refined HomeKit view",
+              "description": "Enable richer native-looking HomeKit service layouts where supported. Device-specific options below can override this behavior.",
+              "type": "boolean",
+              "default": true,
+              "required": false
+            },
+            "vacuumRefinedHomeKitView": {
+              "title": "Robot vacuum refined HomeKit view",
+              "description": "Expose robot vacuums as a Fanv2 primary service for a richer Apple Home control card. HomeKit has no native robot vacuum service, so this uses the closest native UI while keeping vacuum action buttons as secondary services.",
+              "type": "boolean",
+              "default": true,
+              "required": false
+            },
+            "vacuumLegacySwitch": {
+              "title": "Robot vacuum legacy switch",
+              "description": "Also expose a secondary switch for the robot vacuum start/stop control when the refined Fanv2 view is enabled.",
+              "type": "boolean",
+              "default": false,
+              "required": false
+            },
+            "airPurifierRefinedHomeKitView": {
+              "title": "Air purifier refined HomeKit view",
+              "description": "Mark the native AirPurifier service as the primary service so Apple Home shows the richer air-purifier control card.",
+              "type": "boolean",
+              "default": true,
+              "required": false
+            },
+            "airFryerRefinedHomeKitView": {
+              "title": "Air fryer refined HomeKit view",
+              "description": "Use a native HeaterCooler primary service for the air fryer so Apple Home shows a richer heat/temperature card instead of a plain switch.",
+              "type": "boolean",
+              "default": true,
+              "required": false
+            },
+            "airFryerExposeSwitch": {
+              "title": "Air fryer secondary power switch",
+              "description": "Also expose a secondary On/Off switch for the air fryer when refined HeaterCooler view is enabled.",
+              "type": "boolean",
+              "default": false,
+              "required": false
             }
           }
         }
