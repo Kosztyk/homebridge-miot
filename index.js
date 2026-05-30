@@ -11,14 +11,14 @@ let Service, Characteristic, Homebridge, Accessory;
 const PLUGIN_NAME = 'homebridge-xiaomi-mi';
 const PLATFORM_NAME = 'xiaomi-mi';
 const LEGACY_PLATFORM_NAME = 'miot';
-const PLUGIN_VERSION = '1.0.3';
+const PLUGIN_VERSION = '1.0.4';
 
 module.exports = function(homebridge) {
   Service = homebridge.hap.Service;
   Characteristic = homebridge.hap.Characteristic;
   Homebridge = homebridge;
   Accessory = homebridge.platformAccessory;
-  homebridge.registerPlatform(PLUGIN_NAME, PLATFORM_NAME, miotPlatform, true);
+  homebridge.registerPlatform(PLUGIN_NAME, PLATFORM_NAME, xiaomiMiPlatform, true);
   // Backward compatibility: existing configs using "platform": "miot" still load.
   // To get [xiaomi-mi] in the log, change config.json to "platform": "xiaomi-mi".
   homebridge.registerPlatform(PLUGIN_NAME, LEGACY_PLATFORM_NAME, legacyMiotPlatform, true);
@@ -26,10 +26,14 @@ module.exports = function(homebridge) {
 
 
 class miotDeviceController {
-  constructor(log, config, globalmicloudconfig, api) {
+  constructor(log, config, globalmicloudconfig, api, platformName = PLATFORM_NAME) {
     this.log = log;
     this.config = config;
     this.api = api;
+    this.platformName = platformName || PLATFORM_NAME;
+    // Keep accessory UUIDs compatible with the original homebridge-miot/miot platform.
+    // The registered platform name may be xiaomi-mi, but the UUID seed remains miot to avoid duplicate accessories.
+    this.uuidPlatformName = LEGACY_PLATFORM_NAME;
 
     this.logger = new Logger(log, config.name);
 
@@ -98,9 +102,9 @@ class miotDeviceController {
 
     // generate uuid
     if (this.deviceId) {
-      this.UUID = Homebridge.hap.uuid.generate(this.token + this.ip + this.deviceId + this.platformName);
+      this.UUID = Homebridge.hap.uuid.generate(this.token + this.ip + this.deviceId + this.uuidPlatformName);
     } else {
-      this.UUID = Homebridge.hap.uuid.generate(this.token + this.ip + this.platformName);
+      this.UUID = Homebridge.hap.uuid.generate(this.token + this.ip + this.uuidPlatformName);
     }
 
     // prepare variables
@@ -285,12 +289,13 @@ class miotDeviceController {
 
 /*----------========== PLATFORM STUFF ==========----------*/
 class miotPlatform {
-  constructor(log, config, api) {
+  constructor(log, config, api, platformName = PLATFORM_NAME) {
 
     this.cachedAccessories = [];
     this.log = log;
     this.api = api;
     this.config = config;
+    this.platformName = platformName || PLATFORM_NAME;
 
     if (this.api) {
       /*
@@ -389,6 +394,12 @@ class miotPlatform {
 
 }
 
+
+class xiaomiMiPlatform extends miotPlatform {
+  constructor(log, config, api) {
+    super(log, config, api, PLATFORM_NAME);
+  }
+}
 
 class legacyMiotPlatform extends miotPlatform {
   constructor(log, config, api) {
