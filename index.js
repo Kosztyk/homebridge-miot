@@ -11,7 +11,7 @@ let Service, Characteristic, Homebridge, Accessory;
 const PLUGIN_NAME = 'homebridge-xiaomi-mi';
 const PLATFORM_NAME = 'xiaomi-mi';
 const LEGACY_PLATFORM_NAME = 'miot';
-const PLUGIN_VERSION = '1.0.4';
+const PLUGIN_VERSION = '1.0.5';
 
 module.exports = function(homebridge) {
   Service = homebridge.hap.Service;
@@ -404,5 +404,8 @@ class xiaomiMiPlatform extends miotPlatform {
 class legacyMiotPlatform extends miotPlatform {
   constructor(log, config, api) {
     super(log, config, api, LEGACY_PLATFORM_NAME);
+    if (log && typeof log.warn === 'function') {
+      log.warn('Using legacy platform name \'miot\'. Change config.json to platform \'xiaomi-mi\' to get [xiaomi-mi] log prefix and the current accessory ownership.');
+    }
   }
 }
