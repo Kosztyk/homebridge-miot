@@ -565,7 +565,13 @@
               "type": "integer",
               "minimum": 30,
               "default": 300,
-              "description": "When Yeelight LAN port 55443 refuses connections or times out, temporarily stop using the Yeelight LAN path for this many seconds and fall back to cached/Xiaomi Mi state. Prevents Homebridge read-handler errors when LAN Control/Developer Mode is unavailable."
+              "description": "When Yeelight LAN port 55443 refuses connections or times out, temporarily stop using the Yeelight LAN path for this many seconds and fall back to cached/Xiaomi state. Prevents Homebridge read-handler errors when LAN Control/Developer Mode is unavailable or IP changed."
+            },
+            "yeelightSkipXiaomiPolling": {
+              "title": "Skip Xiaomi polling when Yeelight LAN is enabled",
+              "type": "boolean",
+              "default": true,
+              "description": "For yeelink.light.strip2 with Yeelight LAN control enabled, skip normal Xiaomi/MIoT property polling to avoid local timeout/reconnect loops. Yeelight LAN state polling will keep HomeKit in sync instead."
             },
             "refinedHomeKitView": {
               "title": "Refined HomeKit view",

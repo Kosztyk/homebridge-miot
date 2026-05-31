@@ -1,7 +1,7 @@
 {
   "name": "homebridge-xiaomi-mi",
   "displayName": "Xiaomi Mi",
-  "version": "1.0.11",
+  "version": "1.0.14",
   "description": "Homebridge plugin for Xiaomi Mi devices supporting the MIoT protocol",
   "main": "index.js",
   "engines": {
@@ -67,6 +67,6 @@
   },
   "homepage": "https://github.com/Kosztyk/homebridge-xiaomi-mi#readme",
   "bin": {
-    "miot": "./cli/index.js"
+    "xiaomi-mi": "./cli/index.js"
   }
 }

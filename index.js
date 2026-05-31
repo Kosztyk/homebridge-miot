@@ -10,7 +10,7 @@ let Service, Characteristic, Homebridge, Accessory;
 
 const PLUGIN_NAME = 'homebridge-xiaomi-mi';
 const PLATFORM_NAME = 'xiaomi-mi';
-const PLUGIN_VERSION = '1.0.11';
+const PLUGIN_VERSION = '1.0.14';
 
 module.exports = function(homebridge) {
   Service = homebridge.hap.Service;
@@ -27,8 +27,9 @@ class miotDeviceController {
     this.config = config;
     this.api = api;
     this.platformName = platformName || PLATFORM_NAME;
-    // Use the visible Xiaomi Mi platform name for accessory ownership and UUIDs.
-    // The legacy 'miot' platform alias is intentionally not registered anymore.
+    // Stable accessory ownership under the Xiaomi Mi platform. The UUID no longer
+    // includes the IP when a deviceId is available, so router DHCP changes do not
+    // create a new HomeKit accessory.
     this.uuidPlatformName = PLATFORM_NAME;
 
     this.logger = new Logger(log, config.name);
@@ -89,16 +90,16 @@ class miotDeviceController {
 
     // spec dir to store device specs
     this.specDir = this.prefsDir + 'spec/';
-
-    // create device model info file name
-    this.deviceInfoFile = this.prefsDir + 'info_' + this.ip.split('.').join('') + '_' + this.token;
+    // create device model info file name. Prefer deviceId so cached info survives DHCP/IP changes.
+    const deviceInfoKey = this.deviceId ? String(this.deviceId) : this.ip.split('.').join('');
+    this.deviceInfoFile = this.prefsDir + 'info_' + deviceInfoKey + '_' + this.token;
 
     // create cached micloud session file name
     this.cachedMiCloudSessionFile = api.user.storagePath() + Constants.MICLOUD_SESSION_CACHE_LOCATION;
-
-    // generate uuid
+    // generate uuid. When deviceId is known, do not include IP; otherwise a DHCP
+    // change makes Homebridge see the same physical device as a new accessory.
     if (this.deviceId) {
-      this.UUID = Homebridge.hap.uuid.generate(this.token + this.ip + this.deviceId + this.uuidPlatformName);
+      this.UUID = Homebridge.hap.uuid.generate(this.token + this.deviceId + this.uuidPlatformName);
     } else {
       this.UUID = Homebridge.hap.uuid.generate(this.token + this.ip + this.uuidPlatformName);
     }
@@ -199,8 +200,12 @@ class miotDeviceController {
       this.api.registerPlatformAccessories(PLUGIN_NAME, this.platformName, this.device.getAccessories());
 
       if (this.deviceEnabled) {
-        this.logger.info('Everything looks good! Initiating property polling!');
-        this.miotDevice.startPropertyPolling();
+        if (this.shouldSkipXiaomiPropertyPolling()) {
+          this.logger.info('Everything looks good! Skipping Xiaomi property polling because Yeelight LAN control is enabled for this device.');
+        } else {
+          this.logger.info('Everything looks good! Initiating property polling!');
+          this.miotDevice.startPropertyPolling();
+        }
       } else {
         this.logger.warn('Device disabled, property polling will not be initiated! Please enable the device in the config.');
       }
@@ -397,4 +402,3 @@ class xiaomiMiPlatform extends miotPlatform {
     super(log, config, api, PLATFORM_NAME);
   }
 }
-
