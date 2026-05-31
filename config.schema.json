@@ -560,6 +560,13 @@
               "default": 15,
               "description": "For devices using native Yeelight LAN control, poll the Yeelight LAN API every N seconds to refresh HomeKit state when the light is changed from the Xiaomi/Yeelight app. Set to 0 to disable."
             },
+            "yeelightLanErrorCooldown": {
+              "title": "Yeelight LAN error cooldown",
+              "type": "integer",
+              "minimum": 30,
+              "default": 300,
+              "description": "When Yeelight LAN port 55443 refuses connections or times out, temporarily stop using the Yeelight LAN path for this many seconds and fall back to cached/MIOT state. Prevents Homebridge read-handler errors when LAN Control/Developer Mode is unavailable."
+            },
             "refinedHomeKitView": {
               "title": "Refined HomeKit view",
               "description": "Enable richer native-looking HomeKit service layouts where supported. Device-specific options below can override this behavior.",
