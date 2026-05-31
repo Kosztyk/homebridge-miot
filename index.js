@@ -10,7 +10,7 @@ let Service, Characteristic, Homebridge, Accessory;
 
 const PLUGIN_NAME = 'homebridge-xiaomi-mi';
 const PLATFORM_NAME = 'xiaomi-mi';
-const PLUGIN_VERSION = '1.0.14';
+const PLUGIN_VERSION = '1.0.15';
 
 module.exports = function(homebridge) {
   Service = homebridge.hap.Service;
@@ -224,6 +224,21 @@ class miotDeviceController {
 
 
   /*----------========== HELPERS ==========----------*/
+
+  shouldSkipXiaomiPropertyPolling() {
+    const config = this.config || {};
+    const model = String(this.model || config.model || '').toLowerCase();
+
+    // Yeelight strip2 is controlled/synced through the Yeelight LAN path when
+    // enabled. In that mode, the generic Xiaomi/MIOT property poller is both
+    // redundant and noisy, especially after DHCP/IP changes. Keep polling only
+    // if the user explicitly disables the skip.
+    if (model === 'yeelink.light.strip2' && config.yeelightLanControl === true) {
+      return config.yeelightSkipXiaomiPolling !== false;
+    }
+
+    return false;
+  }
 
   _saveDeviceInfo(miotDevice) {
     if (miotDevice) {
