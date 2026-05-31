@@ -1,5 +1,5 @@
 {
-  "pluginAlias": "miot",
+  "pluginAlias": "xiaomi-mi",
   "pluginType": "platform",
   "singular": true,
   "customUi": true,
@@ -74,7 +74,7 @@
               "title": "Name",
               "description": "The name of the device.",
               "type": "string",
-              "default": "Miot device",
+              "default": "Xiaomi Mi device",
               "minLength": 1,
               "required": true
             },
@@ -565,7 +565,7 @@
               "type": "integer",
               "minimum": 30,
               "default": 300,
-              "description": "When Yeelight LAN port 55443 refuses connections or times out, temporarily stop using the Yeelight LAN path for this many seconds and fall back to cached/MIOT state. Prevents Homebridge read-handler errors when LAN Control/Developer Mode is unavailable."
+              "description": "When Yeelight LAN port 55443 refuses connections or times out, temporarily stop using the Yeelight LAN path for this many seconds and fall back to cached/Xiaomi Mi state. Prevents Homebridge read-handler errors when LAN Control/Developer Mode is unavailable."
             },
             "refinedHomeKitView": {
               "title": "Refined HomeKit view",

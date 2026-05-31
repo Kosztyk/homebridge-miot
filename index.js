@@ -10,8 +10,7 @@ let Service, Characteristic, Homebridge, Accessory;
 
 const PLUGIN_NAME = 'homebridge-xiaomi-mi';
 const PLATFORM_NAME = 'xiaomi-mi';
-const LEGACY_PLATFORM_NAME = 'miot';
-const PLUGIN_VERSION = '1.0.6';
+const PLUGIN_VERSION = '1.0.11';
 
 module.exports = function(homebridge) {
   Service = homebridge.hap.Service;
@@ -19,9 +18,6 @@ module.exports = function(homebridge) {
   Homebridge = homebridge;
   Accessory = homebridge.platformAccessory;
   homebridge.registerPlatform(PLUGIN_NAME, PLATFORM_NAME, xiaomiMiPlatform, true);
-  // Backward compatibility: existing configs using "platform": "miot" still load.
-  // To get [xiaomi-mi] in the log, change config.json to "platform": "xiaomi-mi".
-  homebridge.registerPlatform(PLUGIN_NAME, LEGACY_PLATFORM_NAME, legacyMiotPlatform, true);
 };
 
 
@@ -31,9 +27,9 @@ class miotDeviceController {
     this.config = config;
     this.api = api;
     this.platformName = platformName || PLATFORM_NAME;
-    // Keep accessory UUIDs compatible with the original homebridge-miot/miot platform.
-    // The registered platform name may be xiaomi-mi, but the UUID seed remains miot to avoid duplicate accessories.
-    this.uuidPlatformName = LEGACY_PLATFORM_NAME;
+    // Use the visible Xiaomi Mi platform name for accessory ownership and UUIDs.
+    // The legacy 'miot' platform alias is intentionally not registered anymore.
+    this.uuidPlatformName = PLATFORM_NAME;
 
     this.logger = new Logger(log, config.name);
 
@@ -350,7 +346,7 @@ class miotPlatform {
   }
 
   initDevice(deviceConfig) {
-    const deviceName = deviceConfig.name || 'Miot device';
+    const deviceName = deviceConfig.name || 'Xiaomi Mi device';
     if (!deviceConfig.ip) {
       this.log.error(`[${deviceName}] Error: 'ip' is required but not defined for ${deviceName}! Skipping this device.`);
       return;
@@ -402,11 +398,3 @@ class xiaomiMiPlatform extends miotPlatform {
   }
 }
 
-class legacyMiotPlatform extends miotPlatform {
-  constructor(log, config, api) {
-    super(log, config, api, LEGACY_PLATFORM_NAME);
-    if (log && typeof log.warn === 'function') {
-      log.warn('Using legacy platform name \'miot\'. Change config.json to platform \'xiaomi-mi\' to get [xiaomi-mi] log prefix and the current accessory ownership.');
-    }
-  }
-}
