@@ -10,7 +10,7 @@ let Service, Characteristic, Homebridge, Accessory;
 
 const PLUGIN_NAME = 'homebridge-xiaomi-mi';
 const PLATFORM_NAME = 'xiaomi-mi';
-const PLUGIN_VERSION = '1.0.16';
+const PLUGIN_VERSION = '1.0.18';
 
 module.exports = function(homebridge) {
   Service = homebridge.hap.Service;

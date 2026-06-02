@@ -614,6 +614,32 @@
               "type": "boolean",
               "default": false,
               "required": false
+            },
+            "yeelightLanErrorLogLevel": {
+              "title": "Yeelight LAN error log level",
+              "type": "string",
+              "default": "debug",
+              "oneOf": [
+                {
+                  "title": "Off",
+                  "enum": [
+                    "off"
+                  ]
+                },
+                {
+                  "title": "Debug",
+                  "enum": [
+                    "debug"
+                  ]
+                },
+                {
+                  "title": "Warning",
+                  "enum": [
+                    "warn"
+                  ]
+                }
+              ],
+              "description": "Controls logging for Yeelight LAN connectivity failures such as EHOSTUNREACH, ECONNREFUSED and timeouts. Default is debug so normal Homebridge logs are not flooded when a strip changes IP, is offline, or does not expose TCP port 55443."
             }
           }
         }

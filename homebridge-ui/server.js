@@ -215,20 +215,42 @@ class UiServer extends HomebridgePluginUiServer {
 
     try {
       const cachedSession = await fs.readFile(cachedMiCloudSessionFile, 'utf8');
-      if (cachedSession) {
-        let cachedSessionParsed = JSON.parse(cachedSession);
+      if (!cachedSession || cachedSession.trim().length === 0) {
+        return {
+          success: false,
+          cachedSession: null,
+          error: 'No cached MiCloud session found.'
+        };
+      }
+
+      try {
+        const cachedSessionParsed = JSON.parse(cachedSession);
         return {
           success: true,
           cachedSession: cachedSessionParsed
-        }
+        };
+      } catch (parseErr) {
+        return {
+          success: false,
+          cachedSession: null,
+          error: `Cached MiCloud session file is invalid JSON: ${parseErr.message}`
+        };
       }
     } catch (err) {
+      if (err && err.code === 'ENOENT') {
+        return {
+          success: false,
+          cachedSession: null,
+          error: 'No cached MiCloud session found.'
+        };
+      }
+
       return {
         success: false,
-        error: `Failed to get cached MiCloud session: ` + err.message
-      }
+        cachedSession: null,
+        error: `Failed to get cached MiCloud session: ${err.message}`
+      };
     }
-
   }
 
 }

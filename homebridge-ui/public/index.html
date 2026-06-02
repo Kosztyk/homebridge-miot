@@ -270,17 +270,33 @@
       })
     }
 
-    // check wheter we have a cached micloud session
+    // check whether we have a cached MiCloud session. This must never block the settings UI.
     await updateCachedMiCloudSessionInfo();
 
-    // helper to update the current micloud session cache info
+    // helper to update the current MiCloud session cache info
     async function updateCachedMiCloudSessionInfo() {
-      const cachedSessionResult = await homebridge.request('/get-cached-micloud-session', {});
-      if (cachedSessionResult.success && cachedSessionResult.cachedSession) {
-        $('#cachedMiCloudSessionStatusLbl').html("Cached MiCloud session found! Login time : " + cachedSessionResult.cachedSession.loggedInAt);
-      } else {
-        $('#cachedMiCloudSessionStatusLbl').html("No cached MiCloud session found!");
+      try {
+        const cachedSessionResult = await requestWithTimeout('/get-cached-micloud-session', {}, 8000);
+        if (cachedSessionResult && cachedSessionResult.success && cachedSessionResult.cachedSession) {
+          const loginTime = cachedSessionResult.cachedSession.loggedInAt || 'unknown';
+          $('#cachedMiCloudSessionStatusLbl').html("Cached MiCloud session found! Login time : " + loginTime);
+        } else {
+          $('#cachedMiCloudSessionStatusLbl').html("No cached MiCloud session found!");
+          if (cachedSessionResult && cachedSessionResult.error && !String(cachedSessionResult.error).includes('No cached MiCloud session')) {
+            homebridge.toast.warning(cachedSessionResult.error, 'MiCloud Session');
+          }
+        }
+      } catch (err) {
+        $('#cachedMiCloudSessionStatusLbl').html("Cached MiCloud session status unavailable. Settings can still be edited.");
+        homebridge.toast.warning('Could not read cached MiCloud session: ' + err.message, 'MiCloud Session');
       }
+    }
+
+    function requestWithTimeout(path, params, timeoutMs) {
+      return Promise.race([
+        homebridge.request(path, params),
+        new Promise((_, reject) => setTimeout(() => reject(new Error(`Request to ${path} timed out after ${timeoutMs}ms`)), timeoutMs))
+      ]);
     }
 
     // cloud devices helper
@@ -503,7 +519,7 @@
           twoFaTicket
         }).then(async data => {
           if (data.success) {
-            await updateCachedMiCloudSessionInfo();
+            await updateCachedMiCloudSessionInfo().catch(() => undefined);
             homebridge.toast.success('Successfully cached the MiCloud session! You may now use it for device control.');
             $('.micloud-session.miot-message').show();
           } else if (!data.success && data.url) {
@@ -619,5 +635,12 @@
     createForm(configSchema, configuration);
 
     homebridge.hideSpinner();
-  })();
+  })().catch(err => {
+    try {
+      homebridge.toast.error('Xiaomi Mi settings UI failed to initialise: ' + err.message, 'Xiaomi Mi');
+      console.error(err);
+    } finally {
+      homebridge.hideSpinner();
+    }
+  });
 </script>
